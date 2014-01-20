@@ -36,16 +36,11 @@
 
 
 
-	<util:map id="errorCodesMap" map-class="java.util.HashMap"
-		key-type="java.lang.String" value-type="java.lang.Integer">
+	<bean id="validatorFactory" class="javax.validation.Validation"
+		factory-method="buildDefaultValidatorFactory" />
 
-		<entry key="E101" value="400"></entry>
-		<entry key="E102" value="400"></entry>
-		<entry key="E002" value="406"></entry>
-		<entry key="E001" value="404"></entry>
-		<entry key="E003" value="406"></entry>
-
-	</util:map>
+	<bean id="validator" factory-bean="validatorFactory"
+		factory-method="getValidator" />
 
 
 

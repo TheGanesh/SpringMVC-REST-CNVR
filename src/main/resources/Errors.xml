@@ -1,0 +1,16 @@
+<Errors>
+	<Error code="E00000000001">
+		<HttpStatusCode>400</HttpStatusCode>
+		<ShortMessage>Unsupported API call.</ShortMessage>
+		<LongMessage>Unsupported API callUnsupported API callUnsupported API
+			callUnsupported API callUnsupported API call.</LongMessage>			
+		<Message>Unsupported API call.</Message>
+	</Error>
+	<Error code="E00000000001">
+		<HttpStatusCode>400</HttpStatusCode>
+		<ShortMessage>Unsupported API call.</ShortMessage>
+		<LongMessage>Unsupported API callUnsupported API callUnsupported API
+			callUnsupported API callUnsupported API call.</LongMessage>			
+		<Message>Unsupported API call.</Message>
+	</Error>	
+</Errors>

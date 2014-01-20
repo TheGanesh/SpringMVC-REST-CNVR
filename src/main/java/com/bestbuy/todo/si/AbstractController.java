@@ -2,19 +2,22 @@ package com.bestbuy.todo.si;
 
 import java.util.Map;
 
-import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bestbuy.config.ErrorCodesConfig;
 import com.bestbuy.todo.exceptions.TODOException;
-import com.bestbuy.todo.model.ErrorModel;
+import com.bestbuy.todo.exceptions.ValidationException;
+import com.bestbuy.todo.utils.ErrorPair;
+import com.bestbuy.todo.utils.Errors;
 
 public abstract class AbstractController {
 
-  @Resource(name = "errorCodesMap")
-  Map<String, Integer> errorCodesMap;
+  @Inject
+  ErrorCodesConfig errorCodesConfig;
 
   /**
    * Generic exception handler for TODOException, here based on error code http status code will be
@@ -26,14 +29,54 @@ public abstract class AbstractController {
    */
   @ResponseBody
   @ExceptionHandler(TODOException.class)
-  public ErrorModel handleTODOException(TODOException ex, HttpServletResponse response) {
+  public Errors handleTODOException(TODOException ex, HttpServletResponse response) {
 
-    response.setStatus(errorCodesMap.get(ex.getErrorCode()));
+    Map<String, ErrorPair> errorsMap = errorCodesConfig.getErrorsMap();
 
-    ErrorModel errorModel = new ErrorModel();
-    errorModel.setError_code(ex.getErrorCode());
-    errorModel.setError_message(ex.getErrorMsg());
-    return errorModel;
+    Errors errors = new Errors();
+    Integer httpStatusCode = null;
+
+    for (String errorCode : ex.getErrorCodes()) {
+
+      ErrorPair errorPair = errorsMap.get(errorCode);
+
+      Errors.Error error = new Errors.Error();
+      error.setCode(errorCode);
+      error.setMessage(errorPair.getLongError());
+      httpStatusCode = error.getHttpStatusCode();
+      errors.getError().add(error);
+
+    }
+    response.setStatus(httpStatusCode);
+
+    return errors;
 
   }
+
+  @ResponseBody
+  @ExceptionHandler(ValidationException.class)
+  public Errors handleValidationException(ValidationException ex, HttpServletResponse response) {
+
+    Map<String, ErrorPair> errorsMap = errorCodesConfig.getErrorsMap();
+
+    Errors errors = new Errors();
+    Integer httpStatusCode = null;
+
+    for (String errorCode : ex.getErrorCodes()) {
+
+      ErrorPair errorPair = errorsMap.get(errorCode);
+
+      Errors.Error error = new Errors.Error();
+      error.setCode(errorCode);
+      error.setMessage(ex.getPropertyPath() + " " + errorPair.getLongError());
+      httpStatusCode = error.getHttpStatusCode();
+      errors.getError().add(error);
+
+    }
+    response.setStatus(httpStatusCode);
+
+    return errors;
+
+  }
+
 }

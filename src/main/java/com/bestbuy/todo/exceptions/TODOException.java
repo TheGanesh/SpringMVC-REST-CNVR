@@ -1,5 +1,7 @@
 package com.bestbuy.todo.exceptions;
 
+import java.util.List;
+
 /**
  * Exception class used for all exception scenarios of todo activities
  * 
@@ -9,28 +11,19 @@ public class TODOException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
 
-  private String errorCode;
-  private String errorMsg;
+  private List<String> errorCodes;
 
-  public TODOException(String errorCode, String errorMsg) {
-    this.errorCode = errorCode;
-    this.errorMsg = errorMsg;
+  public TODOException(List<String> errorCodes) {
+    this.errorCodes = errorCodes;
   }
 
-  public String getErrorCode() {
-    return errorCode;
+  public List<String> getErrorCodes() {
+    return errorCodes;
   }
 
-  public void setErrorCode(String errorCode) {
-    this.errorCode = errorCode;
+  public void setErrorCodes(List<String> errorCodes) {
+    this.errorCodes = errorCodes;
   }
 
-  public String getErrorMsg() {
-    return errorMsg;
-  }
-
-  public void setErrorMsg(String errorMsg) {
-    this.errorMsg = errorMsg;
-  }
 
 }

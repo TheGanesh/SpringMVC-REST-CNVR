@@ -25,9 +25,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     mediaType("xml", MediaType.APPLICATION_XML).
     mediaType("json", MediaType.APPLICATION_JSON).
     defaultContentType(MediaType.APPLICATION_JSON);
-  }
-
- 
+  } 
 
 
   @Override
@@ -41,4 +39,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     converters.add(j2);
     return;
   }
+  
+  
 }
