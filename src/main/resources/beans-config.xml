@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd	
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="com.bestbuy.todo" />
+	<context:annotation-config />
+
+
+	<int:channel id="input.channel" />
+	<int:channel id="output.channel" />
+
+	<int:gateway id="apiHandler" service-interface="com.bestbuy.todo.si.MessageHandler"
+		default-request-channel="input.channel" default-reply-channel="output.channel" />
+
+	<int:header-value-router input-channel="input.channel"
+		header-name="app" timeout="5000">
+		<int:mapping value="mdot" channel="mdot.channel" />
+		<int:mapping value="ols" channel="ols.channel" />
+	</int:header-value-router>
+
+	<int:service-activator input-channel="mdot.channel"
+		ref="todoService" method="handleMdot" requires-reply="true" />
+
+	<int:service-activator input-channel="ols.channel"
+		ref="todoService" method="handleOls" requires-reply="true" />
+
+
+
+	<util:map id="errorCodesMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="java.lang.Integer">
+
+		<entry key="E101" value="400"></entry>
+		<entry key="E102" value="400"></entry>
+		<entry key="E002" value="406"></entry>
+		<entry key="E001" value="404"></entry>
+		<entry key="E003" value="406"></entry>
+
+	</util:map>
+
+
+
+
+</beans>
