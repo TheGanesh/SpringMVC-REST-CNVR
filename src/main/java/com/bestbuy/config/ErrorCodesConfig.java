@@ -18,54 +18,59 @@ import com.bestbuy.todo.utils.XMLManager;
 @Component("errorCodesConfig")
 public class ErrorCodesConfig {
 
-  @Inject
-  XMLManager xmlManager;
+	@Inject
+	XMLManager xmlManager;
 
-  private Map<String, ErrorPair> errorsMap;
+	private Map<String, ErrorPair> errorsMap;
 
-  public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception {
+		
+		System.out.println("afterPropertiesSet in");
 
-    String scheduledJobsXML = xmlManager.getXMLFromFile("error.xml");
-    Errors errors = unmarshallSecheduledJobs(scheduledJobsXML);
+		String scheduledJobsXML = xmlManager.getXMLFromFile("Error.xml");
+		Errors errors = unmarshallSecheduledJobs(scheduledJobsXML);
 
-    Map<String, ErrorPair> errorsMap = new LinkedHashMap<String, ErrorPair>();
+		Map<String, ErrorPair> errorsMap = new LinkedHashMap<String, ErrorPair>();
 
-    for (Errors.Error err : errors.getError()) {
+		for (Errors.Error err : errors.getError()) {
 
-      ErrorPair errPair = new ErrorPair();
-      errPair.setHttpStatusCode(err.getHttpStatusCode());
-      errPair.setShortError(err.getShortError());
-      errPair.setLongError(err.getLongError());
+			ErrorPair errPair = new ErrorPair();
+			errPair.setHttpStatusCode(err.getHttpStatusCode());
+			errPair.setShortMessage(err.getShortMessage());
+			errPair.setLongMessage(err.getLongMessage());
 
-      errorsMap.put(err.getCode(), errPair);
+			errorsMap.put(err.getCode(), errPair);
 
-    }
+		}
 
-    this.errorsMap = errorsMap;
+		System.out.println("afterPropertiesSet out");
 
-  }
+		this.errorsMap = errorsMap;
 
-  private Errors unmarshallSecheduledJobs(String xml) {
+	}
 
-    try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Errors.class);
-      Unmarshaller jaxbUnmarshaller;
-      jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-      Errors scheduledJobs = (Errors) jaxbUnmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));
-      return scheduledJobs;
+	private Errors unmarshallSecheduledJobs(String xml) {
 
-    } catch (JAXBException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(Errors.class);
+			Unmarshaller jaxbUnmarshaller;
+			jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			Errors scheduledJobs = (Errors) jaxbUnmarshaller
+					.unmarshal(new ByteArrayInputStream(xml.getBytes()));
+			return scheduledJobs;
 
-  public Map<String, ErrorPair> getErrorsMap() {
-    return errorsMap;
-  }
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-  public void setErrorsMap(Map<String, ErrorPair> errorsMap) {
-    this.errorsMap = errorsMap;
-  }
+	public Map<String, ErrorPair> getErrorsMap() {
+		return errorsMap;
+	}
+
+	public void setErrorsMap(Map<String, ErrorPair> errorsMap) {
+		this.errorsMap = errorsMap;
+	}
 
 }
