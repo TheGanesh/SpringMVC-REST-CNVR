@@ -17,8 +17,8 @@ public class TodoResource {
   protected String todoId;
 
   @XmlElement(name = "todo_title", required = true)
-  @NotNull(message = "todo title should not be null")
-  @Size(min = 0, max = 20, message = "todo title should be in between 0,20 chars")
+  @NotNull(message = "REQ00001-todoTitle")
+  @Size(min = 0, max = 20, message = "REQ00002-todoTitle-0-20")
   protected String todoTitle;
 
   @XmlElement(required = true)

@@ -1,82 +1,93 @@
 package com.bestbuy.todo.si;
 
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bestbuy.config.ErrorCodesConfig;
 import com.bestbuy.todo.exceptions.TODOException;
-import com.bestbuy.todo.exceptions.ValidationException;
 import com.bestbuy.todo.utils.ErrorPair;
 import com.bestbuy.todo.utils.Errors;
 
 public abstract class AbstractController {
 
-	@Inject
-	@Named("errorCodesConfig")
-	ErrorCodesConfig errorCodesConfig;
+  @Inject
+  @Named("errorCodesConfig")
+  ErrorCodesConfig errorCodesConfig;
 
-	/**
-	 * Generic exception handler for TODOException, here based on error code
-	 * http status code will be fetched from errorCodes map.
-	 * 
-	 * @param ex
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@ExceptionHandler(TODOException.class)
-	public Errors handleTODOException(TODOException ex,
-			HttpServletResponse response) {
+  /**
+   * Generic exception handler for TODOException, here based on error code
+   * http status code will be fetched from errorCodes map.
+   * 
+   * @param ex
+   * @param response
+   * @return
+   */
+  @ResponseBody
+  @ExceptionHandler(TODOException.class)
+  public Errors handleTODOException(TODOException ex, HttpServletResponse response) {
 
-		Map<String, ErrorPair> errorsMap = errorCodesConfig.getErrorsMap();
+    Errors errors = new Errors();
+    Integer httpStatusCode = null;
 
-		Errors errors = new Errors();
-		Integer httpStatusCode = null;
+    for (String errorCode : ex.getErrorCodes()) {
 
-		for (String errorCode : ex.getErrorCodes()) {
+      String[] errorDetails = errorCode.split("-");
 
-			ErrorPair errorPair = errorsMap.get(errorCode);
+      String errorId = errorDetails[0];
 
-			Errors.Error error = new Errors.Error();
-			error.setCode(errorCode);
-			error.setMessage(errorPair.getLongMessage());
-			httpStatusCode = errorPair.getHttpStatusCode();
-			errors.getError().add(error);
+      Object[] params = new Object[0];
 
-		}
-		response.setStatus(httpStatusCode);
+      if (errorDetails.length > 1) {
 
-		return errors;
+        params = new Object[errorDetails.length - 1];
 
-	}
+        for (int i = 0; i < errorDetails.length - 1; i++) {
+          params[i] = errorDetails[i + 1];
+          System.out.println("params[i]:" + params[i]);
+        }
 
-	@ResponseBody
-	@ExceptionHandler(ValidationException.class)
-	public Errors handleValidationException(ValidationException ex,
-			HttpServletResponse response) {
+      }
 
-		Map<String, ErrorPair> errorsMap = errorCodesConfig.getErrorsMap();
+      
+      System.out.println(params);
+      ErrorPair errorPair = errorCodesConfig.getErrorsMap().get(errorId);
 
-		Errors errors = new Errors();
+      Errors.Error error = new Errors.Error();
+      error.setCode(errorId);
 
-		ErrorPair errorPair = errorsMap.get(ex.getErrorCode());
+      MessageFormat messageFormat = new MessageFormat(errorPair.getMessage());
+      System.out.println(errorPair.getMessage());
+      String finalMessage = messageFormat.format(params);
+      System.out.println(finalMessage);
+      error.setMessage(finalMessage);
+      httpStatusCode = errorPair.getHttpStatusCode();
+      errors.getError().add(error);
 
-		Errors.Error error = new Errors.Error();
-		error.setCode(ex.getErrorCode());
-		error.setMessage(ex.getPropertyPath() + " "
-				+ errorPair.getLongMessage());
-		errors.getError().add(error);
+    }
+    response.setStatus(httpStatusCode);
 
-		response.setStatus(errorPair.getHttpStatusCode());
+    return errors;
 
-		return errors;
+  }
 
-	}
+  protected void handleErrors(BindingResult bindingResult) {
+
+    if (bindingResult.hasErrors()) {
+      List<String> errorCodes = new ArrayList<String>();
+      for (ObjectError error : bindingResult.getAllErrors()) {
+        errorCodes.add(error.getDefaultMessage());
+      }
+      throw new TODOException(errorCodes);
+    }
+  }
 
 }

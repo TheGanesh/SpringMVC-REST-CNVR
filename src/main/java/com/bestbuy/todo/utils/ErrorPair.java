@@ -4,9 +4,7 @@ public class ErrorPair {
 
   private Integer httpStatusCode;
 
-  private String shortMessage;
-
-  private String longMessage;
+  private String message;
 
   public Integer getHttpStatusCode() {
     return httpStatusCode;
@@ -16,20 +14,12 @@ public class ErrorPair {
     this.httpStatusCode = httpStatusCode;
   }
 
-public String getShortMessage() {
-	return shortMessage;
-}
+  public String getMessage() {
+    return message;
+  }
 
-public void setShortMessage(String shortMessage) {
-	this.shortMessage = shortMessage;
-}
-
-public String getLongMessage() {
-	return longMessage;
-}
-
-public void setLongMessage(String longMessage) {
-	this.longMessage = longMessage;
-}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
 }

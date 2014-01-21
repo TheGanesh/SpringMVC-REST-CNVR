@@ -25,15 +25,11 @@ public class Errors {
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlType(name = "", propOrder = {"httpStatusCode", "shortMessage", "longMessage", "message"})
+  @XmlType(name = "", propOrder = {"httpStatusCode", "message"})
   public static class Error {
 
     @XmlElement(name = "HttpStatusCode")
     protected Integer httpStatusCode;
-    @XmlElement(name = "ShortMessage", required = true)
-    protected String shortMessage;
-    @XmlElement(name = "LongMessage", required = true)
-    protected String longMessage;
     @XmlElement(name = "Message", required = true)
     protected String message;
     @XmlAttribute(name = "code")
@@ -45,46 +41,6 @@ public class Errors {
 
     public void setHttpStatusCode(Integer httpStatusCode) {
       this.httpStatusCode = httpStatusCode;
-    }
-
-    /**
-     * Gets the value of the shortMessage property.
-     * 
-     * @return
-     *         possible object is {@link String }
-     */
-    public String getShortMessage() {
-      return shortMessage;
-    }
-
-    /**
-     * Sets the value of the shortMessage property.
-     * 
-     * @param value
-     *          allowed object is {@link String }
-     */
-    public void setShortMessage(String value) {
-      this.shortMessage = value;
-    }
-
-    /**
-     * Gets the value of the longMessage property.
-     * 
-     * @return
-     *         possible object is {@link String }
-     */
-    public String getLongMessage() {
-      return longMessage;
-    }
-
-    /**
-     * Sets the value of the longMessage property.
-     * 
-     * @param value
-     *          allowed object is {@link String }
-     */
-    public void setLongMessage(String value) {
-      this.longMessage = value;
     }
 
     /**

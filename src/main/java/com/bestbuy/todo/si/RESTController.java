@@ -1,7 +1,6 @@
 package com.bestbuy.todo.si;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -11,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,33 +34,16 @@ public class RESTController extends AbstractController {
   @ResponseBody
   @RequestMapping(value = "/todo", method = RequestMethod.POST, consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
   @ResponseStatus(HttpStatus.OK)
-  public TodoResponse invokeTodo(@Valid @RequestBody TodoResource request,BeanPropertyBindingResult bindingResult) throws Exception {
-	System.out.println(bindingResult.getFieldErrors());
-	
-	FieldError fe = bindingResult.getFieldErrors().get(0);
-	
-	 System.out.println("fe.getField():"+fe.getField());
-	 System.out.println("fe.getCode():"+fe.getCode());
-	 System.out.println("fe.getDefaultMessage():"+fe.getDefaultMessage());
-	 System.out.println("fe.getRejectedValue():"+fe.getRejectedValue());
+  public TodoResponse invokeTodo(@Valid @RequestBody TodoResource request, BindingResult bindingResult) throws Exception {
 
-
-for(Entry<String,Object> error:bindingResult.getModel().entrySet()){
-	//System.out.println(error.getValue().getClass());
-	//System.out.println(error.getKey()+": "+error.getValue().toString());
-}
-	if(bindingResult.hasErrors()){
-		for(ObjectError error:bindingResult.getAllErrors()){
-
-//			System.out.println(error.getObjectName());
-//			System.out.println("error.getCode():"+error.getCode());
-//			System.out.println("error.getDefaultMessage():"+error.getDefaultMessage());
-		}
-	}
+    handleErrors(bindingResult);
+    
     TodoResponse response = new TodoResponse();
     response.setTodoId(request.getTodoId());
     return response;
   }
+
+ 
 
   @ResponseBody
   @RequestMapping(value = "/todos", method = RequestMethod.GET, produces = {"application/json", "application/xml"})

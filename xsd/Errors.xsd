@@ -6,8 +6,6 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element type="xs:short" name="HttpStatusCode"/>
-              <xs:element type="xs:string" name="ShortMessage"/>
-              <xs:element type="xs:string" name="LongMessage"/>
               <xs:element type="xs:string" name="Message"/>
             </xs:sequence>
             <xs:attribute type="xs:string" name="code" use="optional"/>

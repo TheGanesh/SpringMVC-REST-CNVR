@@ -1,16 +1,10 @@
 <Errors>
-	<Error code="E00000000001">
-		<HttpStatusCode>400</HttpStatusCode>
-		<ShortMessage>Unsupported API call.</ShortMessage>
-		<LongMessage>Unsupported API callUnsupported API callUnsupported API
-			callUnsupported API callUnsupported API call.</LongMessage>			
-		<Message>Unsupported API call.</Message>
-	</Error>
-	<Error code="E00000000001">
-		<HttpStatusCode>400</HttpStatusCode>
-		<ShortMessage>Unsupported API call.</ShortMessage>
-		<LongMessage>Unsupported API callUnsupported API callUnsupported API
-			callUnsupported API callUnsupported API call.</LongMessage>			
-		<Message>Unsupported API call.</Message>
-	</Error>	
+  <Error code="REQ00001">
+    <HttpStatusCode>400</HttpStatusCode>
+    <Message>{0} should not be null</Message>
+  </Error>
+  <Error code="REQ00002">
+    <HttpStatusCode>400</HttpStatusCode>
+    <Message>{0}'s length should between {1} and {2}</Message>
+  </Error>
 </Errors>
