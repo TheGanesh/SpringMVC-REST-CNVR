@@ -5,6 +5,6 @@
   </Error>
   <Error code="REQ00002">
     <HttpStatusCode>400</HttpStatusCode>
-    <Message>{0}'s length should between {1} and {2}</Message>
+    <Message>{0}''s length should be between {1} and {2}</Message>
   </Error>
 </Errors>
